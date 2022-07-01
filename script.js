@@ -27,14 +27,18 @@ class Rose {
 		this.newPubsub.subscribe('event-message', this.emitMessage, this)
 	}
 
-	emitMessage(message, subscriber) {
-		console.log(subscriber + message);
-		const replies = subscriber === 'Jack' ? 'jack-rose' : 'billy-rose'
-		this.sendReply(replies, `${subscriber} is ok`)
+	emitMessage(event, subscriber) {
+		if (subscriber === 'Jack') {
+			console.log(`${this.name} is ok with Jack`)
+			this.sendReply('billy-rose', `${subscriber} is ok`)
+		} else if (subscriber === 'Billy') {
+			console.log(`${this.name} is ok with Billy`)
+			this.sendReply('jack-rose', `${subscriber} is ok`)
+		}
 	}
 
-	sendReply(replies, message) {
-		this.newPubsub.publish(replies, message, this.name)
+	sendReply(event, message) {
+		this.newPubsub.publish(event, message, this.name)
 	}
 }
 
@@ -45,13 +49,13 @@ class Billy {
 		this.newPubsub.subscribe('billy-rose', this.emitMessage, this)
 	}
 
-	emitMessage(message, subscriber) {
-		console.log(subscriber + message);
+	emitMessage() {
 		console.log(`${this.name} run away`)
 	}
 
-	sendReply(replies, message) {
-		this.newPubsub.publish(replies, message, this.name)
+	sendReply() {
+		console.log(`${this.name} with Rose`)
+		this.newPubsub.publish('event-message', `${this.name} with Rose`, this.name)
 	}
 }
 
@@ -62,13 +66,13 @@ class Jack {
 		this.newPubsub.subscribe('jack-rose', this.emitMessage, this)
 	}
 
-	emitMessage(message, subscriber) {
-		console.log(subscriber + message);
+	emitMessage() {
 		console.log(`${this.name} run away`)
 	}
 
-	sendReply(replies, message) {
-		this.newPubsub.publish(replies, message, this.name)
+	sendReply() {
+		console.log(`${this.name} with Rose`)
+		this.newPubsub.publish('event-message', `${this.name} with Rose`, this.name)
 	}
 }
 
